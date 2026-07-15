@@ -2,8 +2,7 @@
 
 Projeto de faculdade: uma API REST para controlar estoque e vendas de uma
 pequena loja, feita com Node.js, Express e MongoDB (Mongoose). A proposta
-completa está em [`docs/proposta.md`](docs/proposta.md) e o diagrama de
-entidade-relacionamento em [`docs/DER.md`](docs/DER.md).
+completa está em [`docs/proposta.md`](docs/proposta.md)
 
 ## Estrutura do projeto
 
