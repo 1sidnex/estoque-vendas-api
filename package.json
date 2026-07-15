@@ -1,0 +1,24 @@
+{
+  "name": "estoque-vendas-api",
+  "version": "1.0.0",
+  "description": "API REST para controle de estoque e vendas de uma pequena loja",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": ["estoque", "vendas", "api", "express", "mongoose"],
+  "author": "Sidney",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

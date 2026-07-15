@@ -1,0 +1,297 @@
+{
+  "info": {
+    "name": "Estoque e Vendas API",
+    "description": "Coleção de requisições da API de controle de estoque e vendas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api" },
+    { "key": "token", "value": "" },
+    { "key": "categoria_id", "value": "" },
+    { "key": "fornecedor_id", "value": "" },
+    { "key": "produto_id", "value": "" },
+    { "key": "usuario_id", "value": "" },
+    { "key": "venda_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Registrar usuário",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Admin da Loja\",\n  \"email\": \"admin@loja.com\",\n  \"senha\": \"123456\",\n  \"cargo\": \"admin\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/registrar", "host": ["{{base_url}}"], "path": ["auth", "registrar"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@loja.com\",\n  \"senha\": \"123456\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Listar usuários",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/usuarios", "host": ["{{base_url}}"], "path": ["usuarios"] }
+          }
+        },
+        {
+          "name": "Buscar usuário por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["usuarios", "{{usuario_id}}"] }
+          }
+        },
+        {
+          "name": "Atualizar usuário",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Novo Nome\"\n}" },
+            "url": { "raw": "{{base_url}}/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["usuarios", "{{usuario_id}}"] }
+          }
+        },
+        {
+          "name": "Deletar usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["usuarios", "{{usuario_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "Criar categoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Bebidas\",\n  \"descricao\": \"Bebidas em geral\"\n}" },
+            "url": { "raw": "{{base_url}}/categorias", "host": ["{{base_url}}"], "path": ["categorias"] }
+          }
+        },
+        {
+          "name": "Listar categorias",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/categorias", "host": ["{{base_url}}"], "path": ["categorias"] }
+          }
+        },
+        {
+          "name": "Buscar categoria por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/categorias/{{categoria_id}}", "host": ["{{base_url}}"], "path": ["categorias", "{{categoria_id}}"] }
+          }
+        },
+        {
+          "name": "Atualizar categoria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"descricao\": \"Descrição atualizada\"\n}" },
+            "url": { "raw": "{{base_url}}/categorias/{{categoria_id}}", "host": ["{{base_url}}"], "path": ["categorias", "{{categoria_id}}"] }
+          }
+        },
+        {
+          "name": "Deletar categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/categorias/{{categoria_id}}", "host": ["{{base_url}}"], "path": ["categorias", "{{categoria_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fornecedores",
+      "item": [
+        {
+          "name": "Criar fornecedor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Distribuidora ABC\",\n  \"cnpj\": \"12.345.678/0001-99\",\n  \"email\": \"contato@abc.com\",\n  \"telefone\": \"(67) 99999-0000\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/fornecedores", "host": ["{{base_url}}"], "path": ["fornecedores"] }
+          }
+        },
+        {
+          "name": "Listar fornecedores",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/fornecedores", "host": ["{{base_url}}"], "path": ["fornecedores"] }
+          }
+        },
+        {
+          "name": "Buscar fornecedor por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/fornecedores/{{fornecedor_id}}", "host": ["{{base_url}}"], "path": ["fornecedores", "{{fornecedor_id}}"] }
+          }
+        },
+        {
+          "name": "Atualizar fornecedor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"telefone\": \"(67) 98888-1111\"\n}" },
+            "url": { "raw": "{{base_url}}/fornecedores/{{fornecedor_id}}", "host": ["{{base_url}}"], "path": ["fornecedores", "{{fornecedor_id}}"] }
+          }
+        },
+        {
+          "name": "Deletar fornecedor",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/fornecedores/{{fornecedor_id}}", "host": ["{{base_url}}"], "path": ["fornecedores", "{{fornecedor_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Criar produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Refrigerante 2L\",\n  \"descricao\": \"Refrigerante sabor cola\",\n  \"preco\": 9.5,\n  \"quantidadeEstoque\": 50,\n  \"categoria\": \"{{categoria_id}}\",\n  \"fornecedor\": \"{{fornecedor_id}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/produtos", "host": ["{{base_url}}"], "path": ["produtos"] }
+          }
+        },
+        {
+          "name": "Listar produtos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/produtos", "host": ["{{base_url}}"], "path": ["produtos"] }
+          }
+        },
+        {
+          "name": "Buscar produto por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/produtos/{{produto_id}}", "host": ["{{base_url}}"], "path": ["produtos", "{{produto_id}}"] }
+          }
+        },
+        {
+          "name": "Atualizar produto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"preco\": 10.0\n}" },
+            "url": { "raw": "{{base_url}}/produtos/{{produto_id}}", "host": ["{{base_url}}"], "path": ["produtos", "{{produto_id}}"] }
+          }
+        },
+        {
+          "name": "Deletar produto",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/produtos/{{produto_id}}", "host": ["{{base_url}}"], "path": ["produtos", "{{produto_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vendas",
+      "item": [
+        {
+          "name": "Criar venda",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itens\": [\n    { \"produto\": \"{{produto_id}}\", \"quantidade\": 2 }\n  ]\n}"
+            },
+            "url": { "raw": "{{base_url}}/vendas", "host": ["{{base_url}}"], "path": ["vendas"] }
+          }
+        },
+        {
+          "name": "Listar vendas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/vendas", "host": ["{{base_url}}"], "path": ["vendas"] }
+          }
+        },
+        {
+          "name": "Buscar venda por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/vendas/{{venda_id}}", "host": ["{{base_url}}"], "path": ["vendas", "{{venda_id}}"] }
+          }
+        },
+        {
+          "name": "Cancelar venda",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/vendas/{{venda_id}}/cancelar", "host": ["{{base_url}}"], "path": ["vendas", "{{venda_id}}", "cancelar"] }
+          }
+        }
+      ]
+    }
+  ]
+}
