@@ -7,16 +7,21 @@ completa está em [`docs/proposta.md`](docs/proposta.md)
 ## Estrutura do projeto
 
 ```
-src/
-  config/       -> conexão com o banco de dados
-  models/       -> schemas do Mongoose (Usuario, Produto, Categoria, Fornecedor, Venda)
-  controllers/  -> regras de negócio de cada entidade
-  routes/       -> definição dos endpoints da API
-  middlewares/  -> autenticação (JWT), autorização por cargo e tratamento de erros
-  server.js     -> ponto de entrada da aplicação
+src/                -> a API (back-end)
+  config/           -> conexão com o banco de dados
+  models/           -> schemas do Mongoose (Usuario, Produto, Categoria, Fornecedor, Venda)
+  controllers/      -> regras de negócio de cada entidade
+  routes/           -> definição dos endpoints da API
+  middlewares/      -> autenticação (JWT), autorização por cargo e tratamento de erros
+  server.js         -> ponto de entrada da aplicação
+client/             -> a interface web (React + Vite), veja client/README.md
+  src/api/          -> chamadas HTTP para a API
+  src/components/   -> componentes reutilizáveis
+  src/pages/        -> uma página por rota (login, cadastro e home)
+  src/context/      -> contexto de autenticação
 docs/
-  proposta.md   -> proposta da aplicação
-  DER.md        -> diagrama de entidade-relacionamento
+  proposta.md       -> proposta da aplicação
+  Diagrama.jpeg     -> diagrama de entidade-relacionamento
 estoque-vendas-api.postman_collection.json -> coleção de requisições (Postman/Insomnia)
 ```
 
@@ -97,6 +102,32 @@ npm run dev
 Se der tudo certo, o terminal mostra "Conectado ao MongoDB com sucesso" e
 "Servidor rodando em http://localhost:3000". Acessando `GET /` no
 navegador ou no Insomnia já dá pra confirmar que a API está no ar.
+
+## Rodando a interface web
+
+A API sozinha só responde JSON. Para usar o sistema pelo navegador, com o
+servidor da API já rodando, abra **outro terminal** e execute:
+
+```bash
+cd client
+```
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+A interface abre em `http://localhost:5173`. Ela já sabe conversar com a API
+em `http://localhost:3000` — as instruções completas estão em
+[`client/README.md`](client/README.md).
+
+Por enquanto o front cobre só o fluxo de autenticação: **cadastro, login e uma
+home protegida**, que é o que já dá para demonstrar de ponta a ponta. As telas
+de produto, categoria, fornecedor e venda continuam disponíveis pela API
+(pela coleção do Postman) e entram no front nas próximas etapas.
 
 ## Autenticação
 

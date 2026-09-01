@@ -18,7 +18,7 @@ app.use(express.json());
 
 // rota de verificação rápida (útil para saber se a API está no ar)
 app.get('/', (req, res) => {
-  res.status(200).json({ sucesso: true, mensagem: 'API de Controle de Estoque e Vendas no ar 🚀' });
+  res.status(200).json({ sucesso: true, mensagem: 'API de Controle de Estoque e Vendas no ar' });
 });
 
 app.use('/api/auth', authRoutes);
@@ -40,6 +40,6 @@ const PORTA = process.env.PORT || 3000;
 
 conectarBanco().then(() => {
   app.listen(PORTA, () => {
-    console.log(`🚀 Servidor rodando em http://localhost:${PORTA}`);
+    console.log(`Servidor rodando em http://localhost:${PORTA}`);
   });
 });

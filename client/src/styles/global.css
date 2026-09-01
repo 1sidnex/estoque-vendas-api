@@ -1,0 +1,359 @@
+/* ==========================================================================
+   Estilos globais da aplicação.
+   As cores ficam em variáveis CSS (:root) para não repetir código
+   hexadecimal espalhado pelos componentes.
+   ========================================================================== */
+
+:root {
+  --cor-primaria: #4f46e5;
+  --cor-primaria-escura: #4338ca;
+  --cor-primaria-clara: #eef2ff;
+
+  --cor-sucesso-clara: #dcfce7;
+  --cor-perigo: #dc2626;
+  --cor-perigo-clara: #fee2e2;
+  --cor-info: #0284c7;
+  --cor-info-clara: #e0f2fe;
+
+  --fundo: #f4f5fb;
+  --superficie: #ffffff;
+  --borda: #e4e6f0;
+  --texto: #1e2233;
+  --texto-suave: #6b7192;
+
+  --raio: 12px;
+  --sombra: 0 1px 3px rgba(20, 22, 45, 0.08), 0 8px 24px rgba(20, 22, 45, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+a {
+  color: var(--cor-primaria);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Botões =========================================================== */
+
+.botao {
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 9px 17px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.botao:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.botao--largo {
+  width: 100%;
+}
+
+.botao--primario {
+  background: var(--cor-primaria);
+  color: #fff;
+}
+
+.botao--primario:hover:not(:disabled) {
+  background: var(--cor-primaria-escura);
+}
+
+.botao--secundario {
+  background: var(--superficie);
+  border-color: var(--borda);
+  color: var(--texto);
+}
+
+.botao--secundario:hover:not(:disabled) {
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+}
+
+/* ===== Formulários ====================================================== */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.formulario__linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo__rotulo {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.campo__entrada {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--borda);
+  border-radius: 9px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--superficie);
+  color: var(--texto);
+}
+
+.campo__entrada:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px var(--cor-primaria-clara);
+}
+
+.campo__entrada--erro {
+  border-color: var(--cor-perigo);
+}
+
+.campo__dica {
+  font-size: 12.5px;
+  color: var(--texto-suave);
+}
+
+.campo__erro {
+  font-size: 12.5px;
+  color: var(--cor-perigo);
+}
+
+/* ===== Avisos =========================================================== */
+
+.aviso {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.aviso--erro {
+  background: var(--cor-perigo-clara);
+  color: #991b1b;
+}
+
+.aviso--sucesso {
+  background: var(--cor-sucesso-clara);
+  color: #166534;
+}
+
+.aviso__fechar {
+  background: none;
+  border: none;
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+}
+
+/* ===== Etiquetas ======================================================== */
+
+.etiqueta {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.etiqueta--neutro {
+  background: #eef0f6;
+  color: var(--texto-suave);
+}
+
+.etiqueta--info {
+  background: var(--cor-info-clara);
+  color: var(--cor-info);
+}
+
+/* ===== Cartão =========================================================== */
+
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+
+.cartao__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.cartao__titulo {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.cartao__corpo {
+  padding: 18px 20px;
+}
+
+/* ===== Telas de acesso (login / cadastro) =============================== */
+
+.acesso {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #1e2140 0%, #4f46e5 100%);
+}
+
+.acesso__caixa {
+  background: var(--superficie);
+  border-radius: 16px;
+  padding: 34px;
+  width: 100%;
+  max-width: 430px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.acesso__marca {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.acesso__marca h1 {
+  font-size: 22px;
+  margin: 0 0 4px;
+}
+
+.acesso__marca p {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+.acesso__rodape {
+  text-align: center;
+  margin: 20px 0 0;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+/* ===== Home ============================================================= */
+
+.home__topo {
+  height: 66px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borda);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.home__marca {
+  font-size: 16px;
+}
+
+.home__conteudo {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 36px 24px;
+}
+
+.home__saudacao {
+  font-size: 26px;
+}
+
+.home__texto {
+  color: var(--texto-suave);
+  margin: 8px 0 24px;
+}
+
+.dados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0;
+}
+
+.dados dt {
+  font-size: 12px;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dados dd {
+  margin: 4px 0 0;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* ===== 404 ============================================================== */
+
+.nao-encontrada {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.nao-encontrada h1 {
+  font-size: 76px;
+  color: var(--cor-primaria);
+}
+
+.nao-encontrada p {
+  color: var(--texto-suave);
+  margin: 0 0 10px;
+}
+
+/* ===== Responsivo ======================================================= */
+
+@media (max-width: 600px) {
+  .formulario__linha,
+  .dados {
+    grid-template-columns: 1fr;
+  }
+
+  .acesso__caixa {
+    padding: 26px 20px;
+  }
+}
