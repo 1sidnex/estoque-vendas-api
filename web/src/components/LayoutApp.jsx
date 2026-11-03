@@ -7,7 +7,10 @@ import Botao from '@/components/ui/Botao';
 import Etiqueta from '@/components/ui/Etiqueta';
 
 // Casca da área logada: barra superior com navegação, usuário e logout.
-const LINKS = [{ href: '/', rotulo: 'Painel' }];
+const LINKS = [
+  { href: '/', rotulo: 'Painel' },
+  { href: '/produtos', rotulo: 'Produtos' },
+];
 
 export default function LayoutApp({ children }) {
   const { usuario, sair } = useAuth();

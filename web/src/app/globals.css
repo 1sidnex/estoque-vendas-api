@@ -447,6 +447,155 @@ a:hover {
   margin: 0 0 10px;
 }
 
+/* ===== Cabeçalho de página ============================================= */
+
+.pagina__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.pagina__titulo {
+  font-size: 22px;
+}
+
+.pagina__subtitulo {
+  color: var(--texto-suave);
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+
+/* ===== Tabela =========================================================== */
+
+.tabela-wrap {
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabela th,
+.tabela td {
+  text-align: left;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--borda);
+  white-space: nowrap;
+}
+
+.tabela th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+.tabela tbody tr:hover {
+  background: var(--fundo);
+}
+
+.tabela .numero {
+  text-align: right;
+}
+
+.tabela__acoes {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* ===== Estados (carregando / vazio) ==================================== */
+
+.estado {
+  padding: 44px 20px;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+/* ===== Modal =========================================================== */
+
+.modal__fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 22, 45, 0.5);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal {
+  background: var(--superficie);
+  border-radius: var(--raio);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.modal__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--borda);
+  position: sticky;
+  top: 0;
+  background: var(--superficie);
+}
+
+.modal__titulo {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.modal__fechar {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--texto-suave);
+}
+
+.modal__corpo {
+  padding: 20px;
+}
+
+.modal__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ===== Lista de detalhes (dt/dd) ======================================= */
+
+.detalhes {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.detalhes dt {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--texto-suave);
+}
+
+.detalhes dd {
+  margin: 3px 0 0;
+  word-break: break-word;
+}
+
 /* ===== Responsivo ======================================================= */
 
 @media (max-width: 600px) {
