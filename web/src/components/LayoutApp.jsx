@@ -10,6 +10,7 @@ import Etiqueta from '@/components/ui/Etiqueta';
 const LINKS = [
   { href: '/', rotulo: 'Painel' },
   { href: '/produtos', rotulo: 'Produtos' },
+  { href: '/categorias', rotulo: 'Categorias' },
 ];
 
 export default function LayoutApp({ children }) {
