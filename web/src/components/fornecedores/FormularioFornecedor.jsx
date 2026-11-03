@@ -4,11 +4,11 @@ import { useState } from 'react';
 import Campo from '@/components/ui/Campo';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
+import { mascararCnpj, mascararTelefone, cnpjValido, emailValido } from '@/lib/mascaras';
 
 // Formulário de criação/edição de fornecedor, exibido em modal.
-// `fornecedor` nulo = criação.
-// Validação básica por enquanto (nome e CNPJ obrigatórios); a checagem de
-// formato de CNPJ/e-mail e as máscaras ficam para a etapa de melhorias.
+// `fornecedor` nulo = criação. CNPJ e telefone têm máscara; CNPJ e e-mail
+// têm validação de formato no cliente.
 export default function FormularioFornecedor({
   fornecedor,
   aoSalvar,
@@ -32,7 +32,12 @@ export default function FormularioFornecedor({
   function validar() {
     const novos = {};
     if (!valores.nome.trim()) novos.nome = 'Informe o nome.';
+
     if (!valores.cnpj.trim()) novos.cnpj = 'Informe o CNPJ.';
+    else if (!cnpjValido(valores.cnpj)) novos.cnpj = 'CNPJ incompleto (14 dígitos).';
+
+    if (valores.email.trim() && !emailValido(valores.email)) novos.email = 'E-mail inválido.';
+
     setErros(novos);
     return Object.keys(novos).length === 0;
   }
@@ -69,9 +74,9 @@ export default function FormularioFornecedor({
         id="fornecedor-cnpj"
         rotulo="CNPJ"
         value={valores.cnpj}
-        onChange={(e) => alterar('cnpj', e.target.value)}
+        onChange={(e) => alterar('cnpj', mascararCnpj(e.target.value))}
         erro={erros.cnpj}
-        dica="Formato 00.000.000/0000-00 ou 14 dígitos"
+        inputMode="numeric"
         placeholder="00.000.000/0000-00"
       />
 
@@ -88,7 +93,8 @@ export default function FormularioFornecedor({
         id="fornecedor-telefone"
         rotulo="Telefone (opcional)"
         value={valores.telefone}
-        onChange={(e) => alterar('telefone', e.target.value)}
+        onChange={(e) => alterar('telefone', mascararTelefone(e.target.value))}
+        inputMode="numeric"
         placeholder="(67) 90000-0000"
       />
 
