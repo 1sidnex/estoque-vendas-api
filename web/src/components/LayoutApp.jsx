@@ -11,6 +11,7 @@ const LINKS = [
   { href: '/', rotulo: 'Painel' },
   { href: '/produtos', rotulo: 'Produtos' },
   { href: '/categorias', rotulo: 'Categorias' },
+  { href: '/fornecedores', rotulo: 'Fornecedores' },
 ];
 
 export default function LayoutApp({ children }) {
