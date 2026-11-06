@@ -12,10 +12,11 @@ const LINKS = [
   { href: '/produtos', rotulo: 'Produtos' },
   { href: '/categorias', rotulo: 'Categorias' },
   { href: '/fornecedores', rotulo: 'Fornecedores' },
+  { href: '/usuarios', rotulo: 'Usuários', apenasAdmin: true },
 ];
 
 export default function LayoutApp({ children }) {
-  const { usuario, sair } = useAuth();
+  const { usuario, ehAdmin, sair } = useAuth();
   const router = useRouter();
   const caminho = usePathname();
 
@@ -32,7 +33,7 @@ export default function LayoutApp({ children }) {
         </Link>
 
         <nav className="app__nav">
-          {LINKS.map((link) => (
+          {LINKS.filter((link) => !link.apenasAdmin || ehAdmin).map((link) => (
             <Link
               key={link.href}
               href={link.href}
