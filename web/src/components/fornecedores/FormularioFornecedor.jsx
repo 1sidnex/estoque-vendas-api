@@ -49,10 +49,10 @@ export default function FormularioFornecedor({
     const dados = {
       nome: valores.nome.trim(),
       cnpj: valores.cnpj.trim(),
+      // sempre enviados para que limpar o campo na edição tenha efeito
+      email: valores.email.trim(),
+      telefone: valores.telefone.trim(),
     };
-    // campos opcionais só vão quando preenchidos
-    if (valores.email.trim()) dados.email = valores.email.trim();
-    if (valores.telefone.trim()) dados.telefone = valores.telefone.trim();
 
     aoSalvar(dados);
   }

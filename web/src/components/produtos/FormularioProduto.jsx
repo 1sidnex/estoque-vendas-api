@@ -66,9 +66,9 @@ export default function FormularioProduto({
       quantidadeEstoque: Number(valores.quantidadeEstoque),
       categoria: valores.categoria,
       ativo: valores.ativo === 'true',
+      // null remove o fornecedor na edição ('' não é um ObjectId válido).
+      fornecedor: valores.fornecedor || null,
     };
-    // fornecedor é opcional: só envia quando selecionado.
-    if (valores.fornecedor) dados.fornecedor = valores.fornecedor;
 
     aoSalvar(dados);
   }
