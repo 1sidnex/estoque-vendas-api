@@ -1,8 +1,30 @@
-# API de Controle de Estoque e Vendas
+# Controle de Estoque e Vendas
 
-Projeto de faculdade: uma API REST para controlar estoque e vendas de uma
-pequena loja, feita com Node.js, Express e MongoDB (Mongoose). A proposta
-completa está em [`docs/proposta.md`](docs/proposta.md)
+Projeto de faculdade: um sistema web para controlar estoque e vendas de uma
+pequena loja. O repositório tem duas partes que funcionam juntas:
+
+- **API** (`src/`): Node.js, Express e MongoDB (Mongoose), com login por JWT.
+- **Interface web** (`web/`): Next.js, que consome a API.
+
+A proposta completa está em [`docs/proposta.md`](docs/proposta.md).
+
+## Resumo da proposta
+
+Pequenas lojas costumam controlar estoque e vendas em planilha ou caderno, o
+que gera diferença entre o que está anotado e o que existe na prateleira. O
+sistema centraliza o cadastro de produtos, categorias e fornecedores, dá baixa
+no estoque a cada venda e guarda o histórico de vendas de cada vendedor.
+
+Cada usuário tem um perfil que define o que ele pode fazer:
+
+| Tela | Administrador | Vendedor |
+|------|---------------|----------|
+| Produtos, Categorias e Fornecedores | consulta, cadastra, edita e exclui | só consulta |
+| Vendas | registra, consulta e cancela | registra e consulta |
+| Usuários | gerencia | sem acesso (vai para a tela de acesso negado) |
+
+Os botões das ações que o perfil não pode fazer nem aparecem na tela, e a API
+também bloqueia essas operações.
 
 ## Estrutura do projeto
 
@@ -13,12 +35,13 @@ src/                -> a API (back-end)
   controllers/      -> regras de negócio de cada entidade
   routes/           -> definição dos endpoints da API
   middlewares/      -> autenticação (JWT), autorização por cargo e tratamento de erros
-  server.js         -> ponto de entrada da aplicação
-client/             -> a interface web (React + Vite), veja client/README.md
-  src/api/          -> chamadas HTTP para a API
-  src/components/   -> componentes reutilizáveis
-  src/pages/        -> uma página por rota (login, cadastro e home)
-  src/context/      -> contexto de autenticação
+  seed.js           -> cria os usuários e dados de teste
+  server.js         -> ponto de entrada da API
+web/                -> a interface web (Next.js)
+  src/app/          -> uma pasta por rota (login, cadastro, painel e telas internas)
+  src/components/   -> componentes reutilizáveis e formulários de cada tela
+  src/services/     -> chamadas HTTP para a API
+  src/context/      -> sessão do usuário logado
 docs/
   proposta.md       -> proposta da aplicação
   Diagrama.jpeg     -> diagrama de entidade-relacionamento
@@ -64,6 +87,11 @@ vírgula) que resolve o problema.
 
 ## Rodando o projeto
 
+A API e a interface rodam em terminais separados: a API na porta `3000` e a
+interface na `3001`.
+
+### 1. API
+
 Clone o repositório e entre na pasta:
 ```bash
 git clone <url-do-seu-repositorio>
@@ -93,6 +121,11 @@ JWT_EXPIRES_IN=1d
 Não precisa criar o banco `estoque-vendas` manualmente lá no Atlas — o
 Mongoose cria sozinho assim que a API salva o primeiro dado.
 
+Crie os usuários e dados de teste (veja a seção [Usuários de teste](#usuários-de-teste)):
+```bash
+npm run seed
+```
+
 Agora é só subir o servidor:
 ```bash
 npm run dev
@@ -100,16 +133,14 @@ npm run dev
 (ou `npm start`, se não quiser o reinício automático do nodemon)
 
 Se der tudo certo, o terminal mostra "Conectado ao MongoDB com sucesso" e
-"Servidor rodando em http://localhost:3000". Acessando `GET /` no
-navegador ou no Insomnia já dá pra confirmar que a API está no ar.
+"Servidor rodando em http://localhost:3000".
 
-## Rodando a interface web
+### 2. Interface web
 
-A API sozinha só responde JSON. Para usar o sistema pelo navegador, com o
-servidor da API já rodando, abra **outro terminal** e execute:
+Com a API rodando, abra **outro terminal** na pasta do projeto e execute:
 
 ```bash
-cd client
+cd web
 ```
 
 ```bash
@@ -120,14 +151,27 @@ npm install
 npm run dev
 ```
 
-A interface abre em `http://localhost:5173`. Ela já sabe conversar com a API
-em `http://localhost:3000` — as instruções completas estão em
-[`client/README.md`](client/README.md).
+A interface abre em `http://localhost:3001` e já sabe conversar com a API em
+`http://localhost:3000/api`. Se a API estiver em outro endereço, copie
+`web/.env.example` para `web/.env.local` e ajuste o `NEXT_PUBLIC_API_URL`.
 
-Por enquanto o front cobre só o fluxo de autenticação: **cadastro, login e uma
-home protegida**, que é o que já dá para demonstrar de ponta a ponta. As telas
-de produto, categoria, fornecedor e venda continuam disponíveis pela API
-(pela coleção do Postman) e entram no front nas próximas etapas.
+Se a tela mostrar "Não foi possível conectar à API", confira se o terminal da
+API continua rodando na porta 3000.
+
+## Usuários de teste
+
+O comando `npm run seed` cria estes usuários no banco configurado no `.env`:
+
+| Perfil | E-mail | Senha |
+|--------|--------|-------|
+| Administrador | `admin@loja.test` | `admin123` |
+| Vendedor | `vendedor@loja.test` | `vendedor123` |
+
+Ele também cadastra duas categorias, um fornecedor e quatro produtos de
+exemplo (um deles com estoque zerado), para já dar para testar vendas.
+
+Pode rodar o seed mais de uma vez: ele não duplica nem apaga nada. A única
+coisa que ele refaz é a senha e o cargo desses dois usuários de teste.
 
 ## Autenticação
 
@@ -178,4 +222,4 @@ e recurso que não existe retorna `404`.
 - Rotas privadas passam por um middleware que confere o token e, quando
   precisa, também o cargo do usuário.
 - O `.env` está no `.gitignore`, então nenhuma credencial real vai junto
-  no repositório.
+  no repositório. As senhas do seed são só para teste.
