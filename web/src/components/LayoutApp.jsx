@@ -12,6 +12,7 @@ const LINKS = [
   { href: '/produtos', rotulo: 'Produtos' },
   { href: '/categorias', rotulo: 'Categorias' },
   { href: '/fornecedores', rotulo: 'Fornecedores' },
+  { href: '/vendas', rotulo: 'Vendas' },
   { href: '/usuarios', rotulo: 'Usuários', apenasAdmin: true },
 ];
 
