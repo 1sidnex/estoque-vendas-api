@@ -1,5 +1,10 @@
 const Usuario = require('../models/Usuario');
 
+// true quando a rota está agindo sobre a conta de quem está logado
+function ehOProprioUsuario(req) {
+  return String(req.params.id) === String(req.usuario.id);
+}
+
 // POST /api/usuarios — admin cria usuário escolhendo o cargo
 async function criar(req, res, next) {
   try {
@@ -43,6 +48,15 @@ async function buscarPorId(req, res, next) {
 async function atualizar(req, res, next) {
   try {
     const { nome, cargo } = req.body; // e-mail e senha têm rotas/regras próprias
+
+    // o admin logado não pode tirar o próprio acesso de administrador
+    if (ehOProprioUsuario(req) && cargo !== undefined && cargo !== 'admin') {
+      return res.status(403).json({
+        sucesso: false,
+        mensagem: 'Você não pode remover o seu próprio cargo de administrador.',
+      });
+    }
+
     const usuario = await Usuario.findByIdAndUpdate(
       req.params.id,
       { nome, cargo },
@@ -60,6 +74,12 @@ async function atualizar(req, res, next) {
 // DELETE /api/usuarios/:id
 async function deletar(req, res, next) {
   try {
+    if (ehOProprioUsuario(req)) {
+      return res
+        .status(403)
+        .json({ sucesso: false, mensagem: 'Você não pode excluir a sua própria conta.' });
+    }
+
     const usuario = await Usuario.findByIdAndDelete(req.params.id);
     if (!usuario) {
       return res.status(404).json({ sucesso: false, mensagem: 'Usuário não encontrado.' });
