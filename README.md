@@ -218,7 +218,8 @@ login já vem com o admin de teste do seed.
 
 Rotas de criação retornam `201`; erro de validação retorna `400`; rota
 protegida sem token retorna `401`; sem permissão de cargo retorna `403`;
-e recurso que não existe retorna `404`.
+recurso que não existe retorna `404`; e excluir uma categoria que ainda tem
+produtos retorna `409`.
 
 ## Sobre a parte de segurança
 
