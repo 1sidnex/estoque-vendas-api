@@ -58,7 +58,7 @@ export default function FormularioFornecedor({
   }
 
   return (
-    <form className="formulario" onSubmit={enviar}>
+    <form className="formulario" onSubmit={enviar} noValidate>
       <Aviso>{erroGeral}</Aviso>
 
       <Campo
@@ -86,6 +86,7 @@ export default function FormularioFornecedor({
         type="email"
         value={valores.email}
         onChange={(e) => alterar('email', e.target.value)}
+        erro={erros.email}
         placeholder="contato@fornecedor.com"
       />
 

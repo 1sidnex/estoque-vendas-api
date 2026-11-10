@@ -6,8 +6,12 @@ import Selecao from '@/components/ui/Selecao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
 
+// Preço positivo com até 2 casas decimais (ex.: 12, 12.5, 12.50).
+const PRECO_COM_CENTAVOS = /^\d+(\.\d{1,2})?$/;
+
 // Formulário de criação/edição de produto, exibido dentro de um modal.
 // `produto` nulo = criação. `aoSalvar` recebe os dados já tratados.
+// noValidate desliga os balões do navegador para valer a validação abaixo.
 export default function FormularioProduto({
   produto,
   categorias,
@@ -41,12 +45,16 @@ export default function FormularioProduto({
       novos.preco = 'Informe um preço válido.';
     } else if (Number(valores.preco) < 0) {
       novos.preco = 'O preço não pode ser negativo.';
+    } else if (!PRECO_COM_CENTAVOS.test(String(valores.preco))) {
+      novos.preco = 'Use no máximo 2 casas decimais.';
     }
 
     if (valores.quantidadeEstoque === '' || Number.isNaN(Number(valores.quantidadeEstoque))) {
       novos.quantidadeEstoque = 'Informe a quantidade.';
     } else if (Number(valores.quantidadeEstoque) < 0) {
       novos.quantidadeEstoque = 'A quantidade não pode ser negativa.';
+    } else if (!Number.isInteger(Number(valores.quantidadeEstoque))) {
+      novos.quantidadeEstoque = 'A quantidade deve ser um número inteiro.';
     }
 
     if (!valores.categoria) novos.categoria = 'Selecione a categoria.';
@@ -74,7 +82,7 @@ export default function FormularioProduto({
   }
 
   return (
-    <form className="formulario" onSubmit={enviar}>
+    <form className="formulario" onSubmit={enviar} noValidate>
       <Aviso>{erroGeral}</Aviso>
 
       <Campo
