@@ -1,4 +1,5 @@
 const Categoria = require('../models/Categoria');
+const Produto = require('../models/Produto');
 
 async function criar(req, res, next) {
   try {
@@ -47,6 +48,15 @@ async function atualizar(req, res, next) {
 
 async function deletar(req, res, next) {
   try {
+    // produto exige categoria: excluir uma categoria em uso deixaria produtos órfãos
+    const emUso = await Produto.countDocuments({ categoria: req.params.id });
+    if (emUso > 0) {
+      return res.status(409).json({
+        sucesso: false,
+        mensagem: `Não é possível excluir: a categoria tem ${emUso} produto(s). Troque a categoria desses produtos antes.`,
+      });
+    }
+
     const categoria = await Categoria.findByIdAndDelete(req.params.id);
     if (!categoria) {
       return res.status(404).json({ sucesso: false, mensagem: 'Categoria não encontrada.' });
