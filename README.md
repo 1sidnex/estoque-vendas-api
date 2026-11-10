@@ -50,7 +50,8 @@ estoque-vendas-api.postman_collection.json -> coleção de requisições (Postma
 
 ## O que você precisa antes de rodar
 
-- [Node.js](https://nodejs.org/) instalado (usei a versão LTS)
+- [Node.js](https://nodejs.org/) 20.9 ou mais recente (usei a versão LTS) — a
+  interface usa Next.js 16, que não roda em versões anteriores
 - Uma conta gratuita no [MongoDB Atlas](https://www.mongodb.com/atlas)
 
 Optei por usar o MongoDB Atlas (banco na nuvem) em vez de instalar o MongoDB

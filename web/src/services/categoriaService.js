@@ -6,11 +6,6 @@ export async function listar() {
   return data.categorias;
 }
 
-export async function buscarPorId(id) {
-  const { data } = await http.get(`/categorias/${id}`);
-  return data.categoria;
-}
-
 export async function criar(dados) {
   const { data } = await http.post('/categorias', dados);
   return data.categoria;

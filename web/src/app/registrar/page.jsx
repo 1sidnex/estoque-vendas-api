@@ -82,7 +82,7 @@ export default function RegistrarPage() {
           <p>Crie sua conta de vendedor para acessar o painel.</p>
         </div>
 
-        <form className="formulario" onSubmit={enviar}>
+        <form className="formulario" onSubmit={enviar} noValidate>
           <Aviso aoFechar={() => setErroGeral('')}>{erroGeral}</Aviso>
 
           <Campo
