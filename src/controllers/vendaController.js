@@ -1,28 +1,59 @@
 const Venda = require('../models/Venda');
 const Produto = require('../models/Produto');
 
+// Confere o formato dos itens e soma as quantidades do mesmo produto, para que
+// o estoque seja comparado com o total vendido de cada um (e não item a item).
+function agruparItens(itens) {
+  const quantidades = new Map();
+
+  for (const item of itens) {
+    if (!item?.produto || !Number.isInteger(item.quantidade) || item.quantidade < 1) {
+      return {
+        erro: 'Cada item precisa de um produto e de uma quantidade inteira maior que zero.',
+      };
+    }
+    const id = String(item.produto);
+    quantidades.set(id, (quantidades.get(id) || 0) + item.quantidade);
+  }
+
+  return { quantidades };
+}
+
 // POST /api/vendas
 // body esperado: { itens: [{ produto: <id>, quantidade: <n> }, ...] }
 async function criar(req, res, next) {
   try {
     const { itens } = req.body;
 
-    if (!itens || itens.length === 0) {
+    if (!Array.isArray(itens) || itens.length === 0) {
       return res.status(400).json({ sucesso: false, mensagem: 'A venda precisa de ao menos um item.' });
+    }
+
+    // tudo é validado antes de mexer no estoque
+    const { erro, quantidades } = agruparItens(itens);
+    if (erro) {
+      return res.status(400).json({ sucesso: false, mensagem: erro });
     }
 
     let total = 0;
     const itensProcessados = [];
 
     // valida estoque e monta os itens com o preço atual do produto
-    for (const item of itens) {
-      const produto = await Produto.findById(item.produto);
+    for (const [id, quantidade] of quantidades) {
+      const produto = await Produto.findById(id);
 
       if (!produto) {
-        return res.status(404).json({ sucesso: false, mensagem: `Produto ${item.produto} não encontrado.` });
+        return res.status(404).json({ sucesso: false, mensagem: `Produto ${id} não encontrado.` });
       }
 
-      if (produto.quantidadeEstoque < item.quantidade) {
+      if (!produto.ativo) {
+        return res.status(400).json({
+          sucesso: false,
+          mensagem: `O produto "${produto.nome}" está inativo e não pode ser vendido.`,
+        });
+      }
+
+      if (produto.quantidadeEstoque < quantidade) {
         return res.status(400).json({
           sucesso: false,
           mensagem: `Estoque insuficiente para o produto "${produto.nome}". Disponível: ${produto.quantidadeEstoque}.`,
@@ -31,11 +62,11 @@ async function criar(req, res, next) {
 
       itensProcessados.push({
         produto: produto._id,
-        quantidade: item.quantidade,
+        quantidade,
         precoUnitario: produto.preco,
       });
 
-      total += produto.preco * item.quantidade;
+      total += produto.preco * quantidade;
     }
 
     // dá baixa no estoque de cada produto
