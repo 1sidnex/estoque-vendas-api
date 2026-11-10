@@ -18,13 +18,13 @@
       "name": "Auth",
       "item": [
         {
-          "name": "Registrar usuário",
+          "name": "Registrar usuário (sempre vendedor)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Admin da Loja\",\n  \"email\": \"admin@loja.com\",\n  \"senha\": \"123456\",\n  \"cargo\": \"admin\"\n}"
+              "raw": "{\n  \"nome\": \"Ana Vendedora\",\n  \"email\": \"ana@loja.com\",\n  \"senha\": \"123456\"\n}"
             },
             "url": { "raw": "{{base_url}}/auth/registrar", "host": ["{{base_url}}"], "path": ["auth", "registrar"] }
           }
@@ -36,7 +36,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@loja.com\",\n  \"senha\": \"123456\"\n}"
+              "raw": "{\n  \"email\": \"admin@loja.test\",\n  \"senha\": \"admin123\"\n}"
             },
             "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
           }
@@ -46,6 +46,21 @@
     {
       "name": "Usuarios",
       "item": [
+        {
+          "name": "Criar usuário (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Gerente da Loja\",\n  \"email\": \"gerente@loja.com\",\n  \"senha\": \"123456\",\n  \"cargo\": \"admin\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/usuarios", "host": ["{{base_url}}"], "path": ["usuarios"] }
+          }
+        },
         {
           "name": "Listar usuários",
           "request": {

@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import { registrar } from '@/services/authService';
 import Campo from '@/components/ui/Campo';
-import Selecao from '@/components/ui/Selecao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Cadastro público: a API sempre cria a conta como vendedor.
+// Administradores são criados por outro admin na tela de Usuários.
 export default function RegistrarPage() {
   const { entrar, autenticado, carregando } = useAuth();
   const router = useRouter();
@@ -21,7 +22,6 @@ export default function RegistrarPage() {
     email: '',
     senha: '',
     confirmacao: '',
-    cargo: 'vendedor',
   });
   const [erros, setErros] = useState({});
   const [erroGeral, setErroGeral] = useState('');
@@ -63,7 +63,6 @@ export default function RegistrarPage() {
         nome: valores.nome.trim(),
         email: valores.email.trim(),
         senha: valores.senha,
-        cargo: valores.cargo,
       });
       // já entra na aplicação com a conta recém-criada
       await entrar(valores.email.trim(), valores.senha);
@@ -80,7 +79,7 @@ export default function RegistrarPage() {
       <div className="acesso__caixa">
         <div className="acesso__marca">
           <h1>Criar conta</h1>
-          <p>Cadastre um usuário para acessar o painel.</p>
+          <p>Crie sua conta de vendedor para acessar o painel.</p>
         </div>
 
         <form className="formulario" onSubmit={enviar}>
@@ -125,19 +124,6 @@ export default function RegistrarPage() {
               autoComplete="new-password"
             />
           </div>
-
-          {/* Temporário: a rota pública aceita `cargo`, então dá para criar o
-              primeiro admin aqui. Sai quando a criação de admin for restrita. */}
-          <Selecao
-            id="registro-cargo"
-            rotulo="Cargo"
-            value={valores.cargo}
-            onChange={(e) => alterar('cargo', e.target.value)}
-            opcoes={[
-              { valor: 'vendedor', rotulo: 'Vendedor' },
-              { valor: 'admin', rotulo: 'Administrador' },
-            ]}
-          />
 
           <Botao tipo="submit" carregando={enviando} className="botao--largo">
             Criar conta e entrar

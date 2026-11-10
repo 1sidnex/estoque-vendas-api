@@ -12,9 +12,10 @@ function gerarToken(usuario) {
 // POST /api/auth/registrar
 async function registrar(req, res, next) {
   try {
-    const { nome, email, senha, cargo } = req.body;
+    const { nome, email, senha } = req.body;
 
-    const usuario = await Usuario.create({ nome, email, senha, cargo });
+    // cadastro público sempre cria vendedor; admin só é criado por outro admin (POST /api/usuarios)
+    const usuario = await Usuario.create({ nome, email, senha, cargo: 'vendedor' });
 
     // nunca devolvemos a senha, nem o hash, na resposta
     return res.status(201).json({
