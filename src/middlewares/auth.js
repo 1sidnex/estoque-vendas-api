@@ -1,9 +1,12 @@
 const jwt = require('jsonwebtoken');
+const Usuario = require('../models/Usuario');
 
 // Middleware de AUTENTICAÇÃO: verifica se o token JWT enviado no header
 // Authorization: Bearer <token> é válido. Se for, libera o acesso e
 // disponibiliza os dados do usuário logado em req.usuario.
-function autenticar(req, res, next) {
+// O cargo vem do banco, não do token: assim uma troca de cargo ou a exclusão
+// da conta vale na hora, sem esperar o token expirar.
+async function autenticar(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -17,12 +20,25 @@ function autenticar(req, res, next) {
 
   const token = partes[1];
 
+  let payload;
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.usuario = payload; // { id, email, cargo }
-    return next();
+    payload = jwt.verify(token, process.env.JWT_SECRET);
   } catch (erro) {
     return res.status(401).json({ sucesso: false, mensagem: 'Token inválido ou expirado.' });
+  }
+
+  try {
+    const usuario = await Usuario.findById(payload.id);
+    if (!usuario) {
+      return res.status(401).json({
+        sucesso: false,
+        mensagem: 'Usuário não encontrado. Faça login novamente.',
+      });
+    }
+    req.usuario = { id: String(usuario._id), email: usuario.email, cargo: usuario.cargo };
+    return next();
+  } catch (erro) {
+    return next(erro);
   }
 }
 

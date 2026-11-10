@@ -227,6 +227,7 @@ produtos retorna `409`.
   banco.
 - O login gera um token JWT assinado com o segredo do `.env`.
 - Rotas privadas passam por um middleware que confere o token e, quando
-  precisa, também o cargo do usuário.
+  precisa, também o cargo do usuário. O cargo é lido do banco a cada
+  requisição, então rebaixar ou excluir um usuário vale na hora.
 - O `.env` está no `.gitignore`, então nenhuma credencial real vai junto
   no repositório. As senhas do seed são só para teste.
