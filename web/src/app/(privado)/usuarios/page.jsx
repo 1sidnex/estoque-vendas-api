@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import * as usuarioService from '@/services/usuarioService';
-import { registrar } from '@/services/authService';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
@@ -67,7 +66,7 @@ export default function UsuariosPage() {
         await usuarioService.atualizar(modal.usuario._id, dados);
         setSucesso('Usuário atualizado com sucesso.');
       } else {
-        await registrar(dados);
+        await usuarioService.criar(dados);
         setSucesso('Usuário cadastrado com sucesso.');
       }
       fechar();

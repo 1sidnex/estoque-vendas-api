@@ -175,7 +175,8 @@ coisa que ele refaz é a senha e o cargo desses dois usuários de teste.
 
 ## Autenticação
 
-1. Registra um usuário em `POST /api/auth/registrar`.
+1. Registra um usuário em `POST /api/auth/registrar` (o cadastro público
+   sempre cria um `vendedor`).
 2. Faz login em `POST /api/auth/login`, que devolve um `token`.
 3. Esse token vai no header das rotas protegidas:
    ```
@@ -186,19 +187,24 @@ Tem dois cargos possíveis (`cargo`): `admin`, que tem acesso a tudo, e
 `vendedor`, que consulta o catálogo e registra vendas mas não mexe em
 cadastro de produto, categoria, fornecedor ou usuário.
 
+Um `admin` só pode ser criado por outro admin, pela tela de Usuários ou por
+`POST /api/usuarios`. O primeiro admin vem do `npm run seed`.
+
 ## Testando com Postman ou Insomnia
 
 O arquivo [`estoque-vendas-api.postman_collection.json`](estoque-vendas-api.postman_collection.json),
 na raiz do projeto, já traz todas as requisições organizadas por entidade
 e algumas variáveis prontas (`base_url`, `token`, `categoria_id`, etc). É
-só importar e ir preenchendo o `token` depois do login.
+só importar e ir preenchendo o `token` depois do login. A requisição de
+login já vem com o admin de teste do seed.
 
 ## Rotas principais
 
 | Método | Rota                      | O que faz                            | Quem acessa  |
 |--------|---------------------------|----------------------------------------|--------------|
-| POST   | /api/auth/registrar       | cria um usuário                        | público      |
+| POST   | /api/auth/registrar       | cria um usuário vendedor               | público      |
 | POST   | /api/auth/login           | login, devolve token                   | público      |
+| POST   | /api/usuarios             | cria usuário escolhendo o cargo        | admin        |
 | GET    | /api/usuarios             | lista usuários                         | admin        |
 | GET    | /api/categorias           | lista categorias                       | logado       |
 | POST   | /api/categorias           | cria categoria                         | admin        |

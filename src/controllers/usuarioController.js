@@ -1,5 +1,21 @@
 const Usuario = require('../models/Usuario');
 
+// POST /api/usuarios — admin cria usuário escolhendo o cargo
+async function criar(req, res, next) {
+  try {
+    const { nome, email, senha, cargo } = req.body;
+    const usuario = await Usuario.create({ nome, email, senha, cargo });
+
+    // nunca devolvemos a senha, nem o hash, na resposta
+    return res.status(201).json({
+      sucesso: true,
+      usuario: { id: usuario._id, nome: usuario.nome, email: usuario.email, cargo: usuario.cargo },
+    });
+  } catch (erro) {
+    next(erro);
+  }
+}
+
 // GET /api/usuarios
 async function listar(req, res, next) {
   try {
@@ -54,4 +70,4 @@ async function deletar(req, res, next) {
   }
 }
 
-module.exports = { listar, buscarPorId, atualizar, deletar };
+module.exports = { criar, listar, buscarPorId, atualizar, deletar };
