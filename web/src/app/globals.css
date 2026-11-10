@@ -376,6 +376,29 @@ a:hover {
 .app__usuario-nome {
   font-size: 14px;
   font-weight: 500;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Botão do menu: só aparece quando os links não cabem na barra. */
+.app__menu-botao {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--borda);
+  border-radius: 9px;
+  background: var(--superficie);
+  color: var(--texto);
+  cursor: pointer;
+}
+
+.app__menu-botao:hover {
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
 }
 
 .app__conteudo {
@@ -613,6 +636,43 @@ a:hover {
 
 /* ===== Responsivo ======================================================= */
 
+/* Abaixo de 960px os links não cabem na barra e viram um menu suspenso. */
+@media (max-width: 960px) {
+  .app__topo {
+    gap: 12px;
+  }
+
+  .app__menu-botao {
+    display: inline-flex;
+  }
+
+  .app__usuario {
+    margin-left: auto;
+  }
+
+  .app__nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    margin: 0;
+    padding: 8px 16px 12px;
+    background: var(--superficie);
+    border-bottom: 1px solid var(--borda);
+    box-shadow: var(--sombra);
+  }
+
+  .app__nav--aberto {
+    display: flex;
+  }
+
+  .app__nav a {
+    padding: 11px 12px;
+  }
+}
+
 @media (max-width: 600px) {
   .formulario__linha,
   .venda__adicionar,
@@ -624,7 +684,15 @@ a:hover {
     padding: 26px 20px;
   }
 
-  .app__nav {
+  .app__topo {
+    padding: 0 16px;
+  }
+
+  .app__usuario-nome {
     display: none;
+  }
+
+  .app__conteudo {
+    padding: 24px 16px;
   }
 }
