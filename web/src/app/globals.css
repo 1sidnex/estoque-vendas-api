@@ -191,6 +191,11 @@ a:hover {
   font-size: 14px;
 }
 
+/* Aviso no topo das páginas: separa a mensagem da tabela logo abaixo. */
+.pagina__cabecalho ~ .aviso {
+  margin-bottom: 16px;
+}
+
 .aviso--erro {
   background: var(--cor-perigo-clara);
   color: #991b1b;
