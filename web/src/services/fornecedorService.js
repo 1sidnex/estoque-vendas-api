@@ -6,11 +6,6 @@ export async function listar() {
   return data.fornecedores;
 }
 
-export async function buscarPorId(id) {
-  const { data } = await http.get(`/fornecedores/${id}`);
-  return data.fornecedor;
-}
-
 export async function criar(dados) {
   const { data } = await http.post('/fornecedores', dados);
   return data.fornecedor;

@@ -6,11 +6,6 @@ export async function listar() {
   return data.produtos;
 }
 
-export async function buscarPorId(id) {
-  const { data } = await http.get(`/produtos/${id}`);
-  return data.produto;
-}
-
 export async function criar(dados) {
   const { data } = await http.post('/produtos', dados);
   return data.produto;
