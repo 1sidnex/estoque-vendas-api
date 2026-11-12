@@ -6,19 +6,13 @@ import * as produtoService from '@/services/produtoService';
 import * as categoriaService from '@/services/categoriaService';
 import * as fornecedorService from '@/services/fornecedorService';
 import { formatarMoeda } from '@/lib/formato';
+import { tomEstoque } from '@/lib/estoque';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
 import Etiqueta from '@/components/ui/Etiqueta';
 import Modal from '@/components/ui/Modal';
 import FormularioProduto from '@/components/produtos/FormularioProduto';
-
-// Define a cor da etiqueta conforme o nível de estoque.
-function tomEstoque(qtd) {
-  if (qtd <= 0) return 'perigo';
-  if (qtd <= 5) return 'alerta';
-  return 'sucesso';
-}
 
 export default function ProdutosPage() {
   const { ehAdmin } = useAuth();

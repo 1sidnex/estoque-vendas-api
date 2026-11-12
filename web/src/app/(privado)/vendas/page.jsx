@@ -8,18 +8,9 @@ import { formatarData, formatarMoeda } from '@/lib/formato';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
-import Etiqueta from '@/components/ui/Etiqueta';
 import Modal from '@/components/ui/Modal';
 import FormularioVenda from '@/components/vendas/FormularioVenda';
-
-const STATUS = {
-  concluida: { rotulo: 'Concluída', tom: 'sucesso' },
-  cancelada: { rotulo: 'Cancelada', tom: 'perigo' },
-};
-
-function EtiquetaStatus({ status }) {
-  return <Etiqueta tom={STATUS[status]?.tom}>{STATUS[status]?.rotulo || status}</Etiqueta>;
-}
+import EtiquetaStatus from '@/components/vendas/EtiquetaStatus';
 
 export default function VendasPage() {
   const { ehAdmin } = useAuth();
