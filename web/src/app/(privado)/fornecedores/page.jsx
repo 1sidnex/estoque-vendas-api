@@ -6,6 +6,8 @@ import * as fornecedorService from '@/services/fornecedorService';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
+import FiltroLista from '@/components/ui/FiltroLista';
+import { contemTodas } from '@/lib/texto';
 import Modal from '@/components/ui/Modal';
 import FormularioFornecedor from '@/components/fornecedores/FormularioFornecedor';
 
@@ -16,6 +18,7 @@ export default function FornecedoresPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [busca, setBusca] = useState('');
 
   // modal: { tipo: 'criar'|'editar'|'detalhes'|'excluir', fornecedor }
   const [modal, setModal] = useState(null);
@@ -83,6 +86,11 @@ export default function FornecedoresPage() {
     }
   }
 
+  // o CNPJ também é comparado só pelos dígitos, com ou sem pontuação
+  const filtrados = fornecedores.filter((f) =>
+    contemTodas(`${f.nome} ${f.email || ''} ${f.cnpj} ${f.cnpj.replace(/\D/g, '')}`, busca)
+  );
+
   return (
     <div>
       <div className="pagina__cabecalho">
@@ -96,11 +104,21 @@ export default function FornecedoresPage() {
       {sucesso && <Aviso tipo="sucesso" aoFechar={() => setSucesso('')}>{sucesso}</Aviso>}
       {erro && <Aviso aoFechar={() => setErro('')}>{erro}</Aviso>}
 
+      <FiltroLista
+        busca={busca}
+        aoBuscar={setBusca}
+        placeholder="Buscar por nome, e-mail ou CNPJ..."
+        exibidos={filtrados.length}
+        total={fornecedores.length}
+      />
+
       <Cartao>
         {carregando ? (
           <div className="estado">Carregando fornecedores...</div>
         ) : fornecedores.length === 0 ? (
           <div className="estado">Nenhum fornecedor cadastrado.</div>
+        ) : filtrados.length === 0 ? (
+          <div className="estado">Nenhum resultado para a busca.</div>
         ) : (
           <div className="tabela-wrap">
             <table className="tabela">
@@ -114,7 +132,7 @@ export default function FornecedoresPage() {
                 </tr>
               </thead>
               <tbody>
-                {fornecedores.map((f) => (
+                {filtrados.map((f) => (
                   <tr key={f._id}>
                     <td>{f.nome}</td>
                     <td>{f.cnpj}</td>

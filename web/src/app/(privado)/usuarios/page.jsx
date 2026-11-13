@@ -6,6 +6,8 @@ import * as usuarioService from '@/services/usuarioService';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
+import FiltroLista from '@/components/ui/FiltroLista';
+import { contemTodas } from '@/lib/texto';
 import Etiqueta from '@/components/ui/Etiqueta';
 import Modal from '@/components/ui/Modal';
 import FormularioUsuario from '@/components/usuarios/FormularioUsuario';
@@ -21,6 +23,8 @@ export default function UsuariosPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [busca, setBusca] = useState('');
+  const [cargoFiltro, setCargoFiltro] = useState('');
 
   // modal: { tipo: 'criar'|'editar'|'detalhes'|'excluir', usuario }
   const [modal, setModal] = useState(null);
@@ -93,6 +97,10 @@ export default function UsuariosPage() {
     }
   }
 
+  const filtrados = usuarios.filter(
+    (u) => contemTodas(`${u.nome} ${u.email}`, busca) && (!cargoFiltro || u.cargo === cargoFiltro)
+  );
+
   return (
     <div>
       <div className="pagina__cabecalho">
@@ -106,11 +114,31 @@ export default function UsuariosPage() {
       {sucesso && <Aviso tipo="sucesso" aoFechar={() => setSucesso('')}>{sucesso}</Aviso>}
       {erro && <Aviso aoFechar={() => setErro('')}>{erro}</Aviso>}
 
+      <FiltroLista
+        busca={busca}
+        aoBuscar={setBusca}
+        placeholder="Buscar por nome ou e-mail..."
+        selecao={{
+          rotulo: 'Filtrar por cargo',
+          todos: 'Todos os cargos',
+          valor: cargoFiltro,
+          aoMudar: setCargoFiltro,
+          opcoes: [
+            { valor: 'admin', rotulo: 'Administrador' },
+            { valor: 'vendedor', rotulo: 'Vendedor' },
+          ],
+        }}
+        exibidos={filtrados.length}
+        total={usuarios.length}
+      />
+
       <Cartao>
         {carregando ? (
           <div className="estado">Carregando usuários...</div>
         ) : usuarios.length === 0 ? (
           <div className="estado">Nenhum usuário cadastrado.</div>
+        ) : filtrados.length === 0 ? (
+          <div className="estado">Nenhum resultado para a busca.</div>
         ) : (
           <div className="tabela-wrap">
             <table className="tabela">
@@ -123,7 +151,7 @@ export default function UsuariosPage() {
                 </tr>
               </thead>
               <tbody>
-                {usuarios.map((u) => (
+                {filtrados.map((u) => (
                   <tr key={u._id}>
                     <td>{u.nome}</td>
                     <td>{u.email}</td>
