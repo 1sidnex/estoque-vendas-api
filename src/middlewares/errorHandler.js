@@ -40,8 +40,6 @@ function mensagemDeValidacao(e) {
 }
 
 function errorHandler(erro, req, res, next) {
-  console.error(erro);
-
   // Erro de validação do Mongoose (ex: regex de e-mail, campos obrigatórios)
   if (erro.name === 'ValidationError') {
     const mensagens = Object.values(erro.errors).map(mensagemDeValidacao);
@@ -68,7 +66,10 @@ function errorHandler(erro, req, res, next) {
   }
 
   // Erro inesperado: a mensagem interna fica só no log, não vai para o cliente.
+  // Os erros esperados acima já viram uma resposta clara; o log fica só para
+  // o que é inesperado, para não poluir o terminal.
   const status = erro.status || 500;
+  if (status >= 500) console.error(erro);
   const mensagem = status < 500 && erro.message ? erro.message : 'Erro interno no servidor.';
   return res.status(status).json({ sucesso: false, mensagem });
 }
