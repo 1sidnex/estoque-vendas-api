@@ -654,6 +654,56 @@ a:hover {
   word-break: break-word;
 }
 
+/* ===== Campo de busca ================================================== */
+
+.busca {
+  position: relative;
+}
+
+.busca__lista {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 9px;
+  box-shadow: var(--sombra);
+}
+
+.busca__opcao {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.busca__opcao--ativa {
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+}
+
+.busca__detalhe {
+  font-size: 12.5px;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.busca__vazio {
+  padding: 10px;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
 /* ===== Vendas ========================================================== */
 
 .venda__adicionar {
