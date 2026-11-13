@@ -19,12 +19,30 @@ Cada usuário tem um perfil que define o que ele pode fazer:
 
 | Tela | Administrador | Vendedor |
 |------|---------------|----------|
+| Painel | resumo do estoque e dashboard de vendas por vendedor | resumo do estoque |
 | Produtos, Categorias e Fornecedores | consulta, cadastra, edita e exclui | só consulta |
 | Vendas | registra, consulta e cancela | registra e consulta |
 | Usuários | gerencia | sem acesso (vai para a tela de acesso negado) |
 
 Os botões das ações que o perfil não pode fazer nem aparecem na tela, e a API
 também bloqueia essas operações.
+
+## Funcionalidades
+
+- Login, cadastro de vendedor e logout. A sessão continua salva ao recarregar
+  a página.
+- Painel com produtos ativos, estoque baixo, esgotados, vendas do dia,
+  produtos para repor e últimas vendas.
+- Dashboard do administrador com vendas por vendedor: número de vendas,
+  valor total e ticket médio de hoje, desta semana ou deste mês. Só conta
+  vendas concluídas.
+- Cadastro, edição e exclusão de produtos, categorias, fornecedores e
+  usuários, com validação nos formulários.
+- Busca e filtro em todas as listas.
+- Nova venda com busca de produto por nome. A venda dá baixa no estoque e,
+  se for cancelada, os itens voltam para o estoque.
+- Tela de acesso negado para rota sem permissão e página própria para rota
+  que não existe.
 
 ## Estrutura do projeto
 
@@ -47,6 +65,7 @@ web/                -> a interface web (Next.js)
 docs/
   proposta.md       -> proposta da aplicação
   Diagrama.jpeg     -> diagrama de entidade-relacionamento
+  documentacao API.pdf -> documentação da API
 estoque-vendas-api.postman_collection.json -> coleção de requisições (Postman/Insomnia)
 ```
 
@@ -54,12 +73,19 @@ estoque-vendas-api.postman_collection.json -> coleção de requisições (Postma
 
 - [Node.js](https://nodejs.org/) 20.9 ou mais recente (usei a versão LTS) — a
   interface usa Next.js 16, que não roda em versões anteriores
-- Uma conta gratuita no [MongoDB Atlas](https://www.mongodb.com/atlas)
+- Uma conta gratuita no [MongoDB Atlas](https://www.mongodb.com/atlas) ou o
+  MongoDB instalado na máquina
 
 Optei por usar o MongoDB Atlas (banco na nuvem) em vez de instalar o MongoDB
 localmente. No Windows, instalar o MongoDB Server local costuma dar
 trabalho (erro de serviço, DLL faltando etc.), então o Atlas acaba sendo o
 caminho mais tranquilo — e é basicamente o que se usa no dia a dia mesmo.
+
+Se o MongoDB já estiver instalado e rodando na máquina, pode pular a parte
+do Atlas e usar no `.env`:
+```
+MONGO_URI=mongodb://127.0.0.1:27017/estoque-vendas
+```
 
 ## Configurando o banco no Atlas
 
@@ -105,6 +131,8 @@ Instale as dependências:
 ```bash
 npm install
 ```
+Nas versões mais novas do npm pode aparecer um aviso `install-scripts` sobre
+o `bcrypt`. Pode ignorar: o pacote já vem pronto para Windows, Linux e Mac.
 
 Copie o arquivo de variáveis de ambiente:
 ```bash
@@ -175,6 +203,22 @@ exemplo (um deles com estoque zerado), para já dar para testar vendas.
 
 Pode rodar o seed mais de uma vez: ele não duplica nem apaga nada. A única
 coisa que ele refaz é a senha e o cargo desses dois usuários de teste.
+
+## Roteiro rápido de teste
+
+1. Abra `http://localhost:3001` e entre como administrador.
+2. No Painel, veja o resumo do estoque e o dashboard de vendas por vendedor.
+   Troque entre Hoje, Esta semana e Este mês.
+3. Em Vendas, clique em **Nova venda**, digite parte do nome de um produto,
+   escolha a quantidade e registre. O estoque do produto diminui.
+4. Cancele essa venda: os itens voltam para o estoque e o dashboard deixa de
+   contar ela.
+5. Saia e entre como vendedor. Os botões de cadastrar, editar e excluir
+   somem, e a aba Usuários não aparece.
+6. Ainda como vendedor, acesse `http://localhost:3001/usuarios`: o sistema
+   mostra a tela de acesso negado.
+7. Acesse um endereço que não existe, como `http://localhost:3001/teste`,
+   para ver a página de rota inexistente.
 
 ## Autenticação
 
