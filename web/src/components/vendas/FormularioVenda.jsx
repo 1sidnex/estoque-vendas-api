@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Campo from '@/components/ui/Campo';
-import Selecao from '@/components/ui/Selecao';
+import CampoBusca from '@/components/ui/CampoBusca';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
 import { formatarMoeda } from '@/lib/formato';
@@ -21,6 +21,8 @@ export default function FormularioVenda({
   const [quantidade, setQuantidade] = useState('1');
   const [itens, setItens] = useState([]);
   const [erro, setErro] = useState('');
+  const buscaRef = useRef(null);
+  const quantidadeRef = useRef(null);
 
   const total = itens.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
 
@@ -55,6 +57,17 @@ export default function FormularioVenda({
     setProdutoId('');
     setQuantidade('1');
     setErro('');
+    buscaRef.current?.focus();
+  }
+
+  // Ao escolher um produto, o cursor vai para a quantidade.
+  function selecionarProduto(id) {
+    setProdutoId(id);
+    if (id) {
+      setErro('');
+      quantidadeRef.current?.focus();
+      quantidadeRef.current?.select();
+    }
   }
 
   function remover(id) {
@@ -75,15 +88,18 @@ export default function FormularioVenda({
       <Aviso>{erroGeral || erro}</Aviso>
 
       <div className="venda__adicionar">
-        <Selecao
+        <CampoBusca
           id="venda-produto"
           rotulo="Produto"
-          value={produtoId}
-          onChange={(e) => setProdutoId(e.target.value)}
-          placeholder="Selecione..."
+          inputRef={buscaRef}
+          valor={produtoId}
+          aoSelecionar={selecionarProduto}
+          placeholder="Digite para buscar..."
+          vazio="Nenhum produto encontrado."
           opcoes={produtos.map((p) => ({
             valor: p._id,
-            rotulo: `${p.nome} (${formatarMoeda(p.preco)} • ${p.quantidadeEstoque} em estoque)`,
+            rotulo: p.nome,
+            detalhe: `${formatarMoeda(p.preco)} • ${p.quantidadeEstoque} em estoque`,
           }))}
         />
         <Campo
@@ -94,6 +110,14 @@ export default function FormularioVenda({
           step="1"
           value={quantidade}
           onChange={(e) => setQuantidade(e.target.value)}
+          onKeyDown={(e) => {
+            // Enter na quantidade adiciona o item em vez de registrar a venda
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              adicionar();
+            }
+          }}
+          ref={quantidadeRef}
         />
         <Botao variante="secundario" onClick={adicionar}>
           Adicionar
