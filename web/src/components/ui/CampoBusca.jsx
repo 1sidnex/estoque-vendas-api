@@ -1,14 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-// Ignora maiúsculas e acentos: "agua" encontra "Água mineral".
-function normalizar(texto) {
-  return texto
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase();
-}
+import { contemTodas } from '@/lib/texto';
 
 // Campo de texto que filtra uma lista de opções enquanto se digita.
 // `opcoes` é uma lista de { valor, rotulo, detalhe }. `valor` vazio limpa o campo.
@@ -32,11 +25,7 @@ export default function CampoBusca({
     if (!valor) setTexto('');
   }, [valor]);
 
-  const palavras = normalizar(texto).split(/\s+/).filter(Boolean);
-  const filtradas = opcoes.filter((opcao) => {
-    const rotuloNormalizado = normalizar(opcao.rotulo);
-    return palavras.every((palavra) => rotuloNormalizado.includes(palavra));
-  });
+  const filtradas = opcoes.filter((opcao) => contemTodas(opcao.rotulo, texto));
 
   function escolher(opcao) {
     setTexto(opcao.rotulo);

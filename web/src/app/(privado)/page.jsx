@@ -5,12 +5,14 @@ import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
 import * as produtoService from '@/services/produtoService';
 import * as vendaService from '@/services/vendaService';
+import * as usuarioService from '@/services/usuarioService';
 import { formatarData, formatarMoeda } from '@/lib/formato';
 import { LIMITE_ESTOQUE_BAIXO, tomEstoque } from '@/lib/estoque';
 import Cartao from '@/components/ui/Cartao';
 import Aviso from '@/components/ui/Aviso';
 import Etiqueta from '@/components/ui/Etiqueta';
 import EtiquetaStatus from '@/components/vendas/EtiquetaStatus';
+import VendasPorVendedor from '@/components/painel/VendasPorVendedor';
 
 const QTD_ULTIMAS_VENDAS = 5;
 
@@ -51,24 +53,28 @@ function Indicador({ rotulo, valor, detalhe, tom }) {
 
 // Painel inicial: resumo do estoque e das vendas para admin e vendedor.
 export default function PainelPage() {
-  const { usuario } = useAuth();
+  const { usuario, ehAdmin } = useAuth();
   const primeiroNome = usuario?.nome?.split(' ')[0] || 'bem-vindo';
 
   const [resumo, setResumo] = useState(null);
+  // vendas + usuários para o dashboard por vendedor (só admin)
+  const [equipe, setEquipe] = useState(null);
   const [erro, setErro] = useState('');
 
   const carregar = useCallback(async () => {
     setErro('');
     try {
-      const [produtos, vendas] = await Promise.all([
+      const [produtos, vendas, usuarios] = await Promise.all([
         produtoService.listar(),
         vendaService.listar(),
+        ehAdmin ? usuarioService.listar() : null,
       ]);
       setResumo(resumir(produtos, vendas));
+      setEquipe(usuarios ? { vendas, usuarios } : null);
     } catch (e) {
       setErro(e.message);
     }
-  }, []);
+  }, [ehAdmin]);
 
   useEffect(() => {
     carregar();
@@ -167,6 +173,10 @@ export default function PainelPage() {
               )}
             </Cartao>
           </div>
+
+          {ehAdmin && equipe && (
+            <VendasPorVendedor vendas={equipe.vendas} usuarios={equipe.usuarios} />
+          )}
         </>
       )}
     </div>

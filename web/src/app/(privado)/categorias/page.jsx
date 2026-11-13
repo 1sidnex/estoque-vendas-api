@@ -6,6 +6,8 @@ import * as categoriaService from '@/services/categoriaService';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
+import FiltroLista from '@/components/ui/FiltroLista';
+import { contemTodas } from '@/lib/texto';
 import Modal from '@/components/ui/Modal';
 import FormularioCategoria from '@/components/categorias/FormularioCategoria';
 
@@ -16,6 +18,7 @@ export default function CategoriasPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [busca, setBusca] = useState('');
 
   // modal: { tipo: 'criar'|'editar'|'detalhes'|'excluir', categoria }
   const [modal, setModal] = useState(null);
@@ -83,6 +86,8 @@ export default function CategoriasPage() {
     }
   }
 
+  const filtrados = categorias.filter((c) => contemTodas(`${c.nome} ${c.descricao || ''}`, busca));
+
   return (
     <div>
       <div className="pagina__cabecalho">
@@ -96,11 +101,21 @@ export default function CategoriasPage() {
       {sucesso && <Aviso tipo="sucesso" aoFechar={() => setSucesso('')}>{sucesso}</Aviso>}
       {erro && <Aviso aoFechar={() => setErro('')}>{erro}</Aviso>}
 
+      <FiltroLista
+        busca={busca}
+        aoBuscar={setBusca}
+        placeholder="Buscar por nome ou descrição..."
+        exibidos={filtrados.length}
+        total={categorias.length}
+      />
+
       <Cartao>
         {carregando ? (
           <div className="estado">Carregando categorias...</div>
         ) : categorias.length === 0 ? (
           <div className="estado">Nenhuma categoria cadastrada.</div>
+        ) : filtrados.length === 0 ? (
+          <div className="estado">Nenhum resultado para a busca.</div>
         ) : (
           <div className="tabela-wrap">
             <table className="tabela">
@@ -112,7 +127,7 @@ export default function CategoriasPage() {
                 </tr>
               </thead>
               <tbody>
-                {categorias.map((c) => (
+                {filtrados.map((c) => (
                   <tr key={c._id}>
                     <td>{c.nome}</td>
                     <td>{c.descricao || '—'}</td>

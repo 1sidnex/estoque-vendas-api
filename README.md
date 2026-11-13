@@ -36,7 +36,9 @@ src/                -> a API (back-end)
   routes/           -> definição dos endpoints da API
   middlewares/      -> autenticação (JWT), autorização por cargo e tratamento de erros
   seed.js           -> cria os usuários e dados de teste
-  server.js         -> ponto de entrada da API
+  app.js            -> monta a API (rotas e middlewares)
+  server.js         -> ponto de entrada: conecta ao banco e sobe a API
+tests/              -> testes automatizados da API (npm test)
 web/                -> a interface web (Next.js)
   src/app/          -> uma pasta por rota (login, cadastro, painel e telas internas)
   src/components/   -> componentes reutilizáveis e formulários de cada tela
@@ -95,7 +97,7 @@ interface na `3001`.
 
 Clone o repositório e entre na pasta:
 ```bash
-git clone <url-do-seu-repositorio>
+git clone https://github.com/1sidnex/estoque-vendas-api.git
 cd estoque-vendas-api
 ```
 
@@ -199,12 +201,26 @@ e algumas variáveis prontas (`base_url`, `token`, `categoria_id`, etc). É
 só importar e ir preenchendo o `token` depois do login. A requisição de
 login já vem com o admin de teste do seed.
 
+## Testes automatizados
+
+A API tem testes que conferem login, permissões de cada perfil, regras de
+venda e estoque, categoria em uso e as mensagens de erro. Na pasta do projeto:
+
+```bash
+npm test
+```
+
+Os testes usam um MongoDB temporário em memória, então não precisam do
+Atlas nem do `.env`. Na primeira vez o MongoDB de teste é baixado
+automaticamente (precisa de internet e demora um pouco mais).
+
 ## Rotas principais
 
 | Método | Rota                      | O que faz                            | Quem acessa  |
 |--------|---------------------------|----------------------------------------|--------------|
 | POST   | /api/auth/registrar       | cria um usuário vendedor               | público      |
 | POST   | /api/auth/login           | login, devolve token                   | público      |
+| GET    | /api/auth/eu              | dados e cargo atual do usuário logado  | logado       |
 | POST   | /api/usuarios             | cria usuário escolhendo o cargo        | admin        |
 | GET    | /api/usuarios             | lista usuários                         | admin        |
 | GET    | /api/categorias           | lista categorias                       | logado       |

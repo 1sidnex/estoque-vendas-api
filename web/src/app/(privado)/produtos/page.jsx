@@ -10,6 +10,8 @@ import { tomEstoque } from '@/lib/estoque';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
+import FiltroLista from '@/components/ui/FiltroLista';
+import { contemTodas } from '@/lib/texto';
 import Etiqueta from '@/components/ui/Etiqueta';
 import Modal from '@/components/ui/Modal';
 import FormularioProduto from '@/components/produtos/FormularioProduto';
@@ -23,6 +25,8 @@ export default function ProdutosPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [busca, setBusca] = useState('');
+  const [categoriaFiltro, setCategoriaFiltro] = useState('');
 
   // modal: { tipo: 'criar'|'editar'|'detalhes'|'excluir', produto }
   const [modal, setModal] = useState(null);
@@ -97,6 +101,12 @@ export default function ProdutosPage() {
     }
   }
 
+  const filtrados = produtos.filter(
+    (p) =>
+      contemTodas(p.nome, busca) &&
+      (!categoriaFiltro || p.categoria?._id === categoriaFiltro)
+  );
+
   return (
     <div>
       <div className="pagina__cabecalho">
@@ -110,11 +120,28 @@ export default function ProdutosPage() {
       {sucesso && <Aviso tipo="sucesso" aoFechar={() => setSucesso('')}>{sucesso}</Aviso>}
       {erro && <Aviso aoFechar={() => setErro('')}>{erro}</Aviso>}
 
+      <FiltroLista
+        busca={busca}
+        aoBuscar={setBusca}
+        placeholder="Buscar produto pelo nome..."
+        selecao={{
+          rotulo: 'Filtrar por categoria',
+          todos: 'Todas as categorias',
+          valor: categoriaFiltro,
+          aoMudar: setCategoriaFiltro,
+          opcoes: categorias.map((c) => ({ valor: c._id, rotulo: c.nome })),
+        }}
+        exibidos={filtrados.length}
+        total={produtos.length}
+      />
+
       <Cartao className="cartao--tabela">
         {carregando ? (
           <div className="estado">Carregando produtos...</div>
         ) : produtos.length === 0 ? (
           <div className="estado">Nenhum produto cadastrado.</div>
+        ) : filtrados.length === 0 ? (
+          <div className="estado">Nenhum resultado para a busca.</div>
         ) : (
           <div className="tabela-wrap">
             <table className="tabela">
@@ -129,7 +156,7 @@ export default function ProdutosPage() {
                 </tr>
               </thead>
               <tbody>
-                {produtos.map((p) => (
+                {filtrados.map((p) => (
                   <tr key={p._id}>
                     <td>{p.nome}</td>
                     <td>{p.categoria?.nome || '—'}</td>

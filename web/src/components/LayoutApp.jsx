@@ -32,7 +32,7 @@ function IconeMenu({ aberto }) {
 }
 
 export default function LayoutApp({ children }) {
-  const { usuario, ehAdmin, sair } = useAuth();
+  const { usuario, ehAdmin, sair, atualizarUsuario } = useAuth();
   const router = useRouter();
   const caminho = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
@@ -41,6 +41,11 @@ export default function LayoutApp({ children }) {
   useEffect(() => {
     setMenuAberto(false);
   }, [caminho]);
+
+  // A cada página aberta, confere na API se o cargo ou a conta mudaram.
+  useEffect(() => {
+    atualizarUsuario();
+  }, [caminho, atualizarUsuario]);
 
   function sairDoSistema() {
     sair();

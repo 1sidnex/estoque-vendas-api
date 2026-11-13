@@ -525,6 +525,30 @@ a:hover {
   margin: 4px 0 0;
 }
 
+/* ===== Filtros das listagens =========================================== */
+
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filtros__busca {
+  flex: 1;
+  min-width: 0;
+}
+
+.filtros__selecao {
+  width: 220px;
+}
+
+.filtros__contagem {
+  font-size: 13px;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
 /* ===== Tabela =========================================================== */
 
 .tabela-wrap {
@@ -767,6 +791,16 @@ a:hover {
 }
 
 @media (max-width: 600px) {
+  .filtros {
+    flex-wrap: wrap;
+  }
+
+  .filtros__busca,
+  .filtros__selecao {
+    flex: 1 1 100%;
+    width: auto;
+  }
+
   .formulario__linha,
   .venda__adicionar {
     grid-template-columns: 1fr;

@@ -38,6 +38,20 @@ export function AuthProvider({ children }) {
     setSessao({ token: null, usuario: null });
   }, []);
 
+  // Busca o cargo atual na API: se o usuário foi rebaixado, a tela se ajusta;
+  // se a conta foi excluída, o 401 derruba a sessão (veja lib/http.js).
+  const atualizarUsuario = useCallback(async () => {
+    if (!localStorage.getItem('token')) return;
+    try {
+      const usuario = await authService.eu();
+      if (!localStorage.getItem('token')) return;
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      setSessao((antes) => (antes.token ? { ...antes, usuario } : antes));
+    } catch {
+      // Sem conexão com a API: mantém os dados do login.
+    }
+  }, []);
+
   const valor = useMemo(
     () => ({
       usuario: sessao.usuario,
@@ -47,8 +61,9 @@ export function AuthProvider({ children }) {
       carregando,
       entrar,
       sair,
+      atualizarUsuario,
     }),
-    [sessao, carregando, entrar, sair]
+    [sessao, carregando, entrar, sair, atualizarUsuario]
   );
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>;

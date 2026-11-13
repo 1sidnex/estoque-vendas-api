@@ -8,6 +8,8 @@ import { formatarData, formatarMoeda } from '@/lib/formato';
 import Cartao from '@/components/ui/Cartao';
 import Botao from '@/components/ui/Botao';
 import Aviso from '@/components/ui/Aviso';
+import FiltroLista from '@/components/ui/FiltroLista';
+import { contemTodas } from '@/lib/texto';
 import Modal from '@/components/ui/Modal';
 import FormularioVenda from '@/components/vendas/FormularioVenda';
 import EtiquetaStatus from '@/components/vendas/EtiquetaStatus';
@@ -20,6 +22,8 @@ export default function VendasPage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [busca, setBusca] = useState('');
+  const [statusFiltro, setStatusFiltro] = useState('');
 
   // modal: { tipo: 'criar'|'detalhes'|'cancelar', venda }
   const [modal, setModal] = useState(null);
@@ -89,6 +93,10 @@ export default function VendasPage() {
     }
   }
 
+  const filtrados = vendas.filter(
+    (v) => contemTodas(v.usuario?.nome || '', busca) && (!statusFiltro || v.status === statusFiltro)
+  );
+
   return (
     <div>
       <div className="pagina__cabecalho">
@@ -104,11 +112,31 @@ export default function VendasPage() {
       {sucesso && <Aviso tipo="sucesso" aoFechar={() => setSucesso('')}>{sucesso}</Aviso>}
       {erro && <Aviso aoFechar={() => setErro('')}>{erro}</Aviso>}
 
+      <FiltroLista
+        busca={busca}
+        aoBuscar={setBusca}
+        placeholder="Buscar pelo vendedor..."
+        selecao={{
+          rotulo: 'Filtrar por status',
+          todos: 'Todos os status',
+          valor: statusFiltro,
+          aoMudar: setStatusFiltro,
+          opcoes: [
+            { valor: 'concluida', rotulo: 'Concluída' },
+            { valor: 'cancelada', rotulo: 'Cancelada' },
+          ],
+        }}
+        exibidos={filtrados.length}
+        total={vendas.length}
+      />
+
       <Cartao>
         {carregando ? (
           <div className="estado">Carregando vendas...</div>
         ) : vendas.length === 0 ? (
           <div className="estado">Nenhuma venda registrada.</div>
+        ) : filtrados.length === 0 ? (
+          <div className="estado">Nenhum resultado para a busca.</div>
         ) : (
           <div className="tabela-wrap">
             <table className="tabela">
@@ -123,7 +151,7 @@ export default function VendasPage() {
                 </tr>
               </thead>
               <tbody>
-                {vendas.map((v) => (
+                {filtrados.map((v) => (
                   <tr key={v._id}>
                     <td>{formatarData(v.createdAt)}</td>
                     <td>{v.usuario?.nome || '—'}</td>
