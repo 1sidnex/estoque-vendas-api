@@ -59,4 +59,10 @@ async function login(req, res, next) {
   }
 }
 
-module.exports = { registrar, login };
+// GET /api/auth/eu — dados atuais do usuário logado (o cargo vem do banco,
+// via middleware), para a tela não depender do cargo guardado no login.
+function eu(req, res) {
+  return res.status(200).json({ sucesso: true, usuario: req.usuario });
+}
+
+module.exports = { registrar, login, eu };

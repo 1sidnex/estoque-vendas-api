@@ -21,7 +21,8 @@ http.interceptors.response.use(
   (resposta) => resposta,
   (erro) => {
     const rota = erro.config?.url || '';
-    const ehRotaDeLogin = rota.includes('/auth/');
+    // No login/cadastro, 401 é "senha errada" e não deve derrubar a sessão.
+    const ehRotaDeLogin = /\/auth\/(login|registrar)$/.test(rota);
 
     // Token expirado ou inválido em rota protegida: derruba a sessão.
     if (erro.response?.status === 401 && !ehRotaDeLogin && typeof window !== 'undefined') {

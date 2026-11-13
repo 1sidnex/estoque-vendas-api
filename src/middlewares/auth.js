@@ -35,7 +35,12 @@ async function autenticar(req, res, next) {
         mensagem: 'Usuário não encontrado. Faça login novamente.',
       });
     }
-    req.usuario = { id: String(usuario._id), email: usuario.email, cargo: usuario.cargo };
+    req.usuario = {
+      id: String(usuario._id),
+      nome: usuario.nome,
+      email: usuario.email,
+      cargo: usuario.cargo,
+    };
     return next();
   } catch (erro) {
     return next(erro);
